@@ -1,0 +1,33 @@
+version: "3.7"
+volumes:
+  demo-atm-dbdata:
+services:
+  demo-atm-db:
+    image: mysql:8.0
+    restart: always
+    container_name: mysql-demo-atm
+    ports:
+      - "33356:3306"
+    environment:
+      - MYSQL_DATABASE=atmdb
+      - MYSQL_USER=atm
+      - MYSQL_PASSWORD=point
+      - MYSQL_ROOT_PASSWORD=1234
+      - TZ=Asia/Seoul
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+#      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - demo-atm-dbdata:/var/lib/mysql2
+
+  demo-atm-redis:
+    image: redis:alpine
+    command: redis-server --port 6379
+    container_name: redis_boot
+    hostname: redis_boot
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    ports:
+      - 6379:6379
